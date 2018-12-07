@@ -1,5 +1,12 @@
 package main
 
+import (
+	"log"
+	"strconv"
+
+	"github.com/OlympBMSTU/annotations/config"
+	"github.com/jackc/pgx"
+)
 
 func Init() (*pgx.ConnPool, error) {
 	conf, err := config.GetConfigInstance()
@@ -33,8 +40,9 @@ func Init() (*pgx.ConnPool, error) {
 }
 
 func main() {
-    pool, err := Init() 
-    if err != nil {
-        log.Print(err)
-    }
+	pool, err := Init()
+	if err != nil {
+		log.Print(err)
+	}
+
 }

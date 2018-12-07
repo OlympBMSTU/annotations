@@ -1,7 +1,7 @@
 package config
 
 type Config struct {
-    fileStorageDir string
+	fileStorageDir string
 	listenerHost   string
 	listenerPort   string
 	dbHost         string
@@ -14,7 +14,7 @@ type Config struct {
 	authSecret     string
 }
 
-var *configInstance = nil
+var configInstance *Config = nil
 
 func (cfg Config) GetFileStorageName() string {
 	return cfg.fileStorageDir
@@ -60,18 +60,16 @@ func (cfg Config) GetListenerPort() string {
 	return cfg.listenerPort
 }
 
-
-
-func init() error {
-
+func initConfig() error {
+	return nil
 }
 
 func GetConfigInstance() (*Config, error) {
-    if configInstance == nil {
-        err := init() 
-        if err != nil {
-            return _, err
-        }
-    }
-    return configInstance, nil
+	if configInstance == nil {
+		err := initConfig()
+		if err != nil {
+			return nil, err
+		}
+	}
+	return configInstance, nil
 }
