@@ -1,5 +1,14 @@
 package config
 
+import (
+	"reflect"
+	"fmt"
+	"strings"
+	"errors"
+	"os"
+	"io/ioutil"
+)
+
 type Config struct {
 	fileStorageDir string
 	listenerHost   string
@@ -61,6 +70,40 @@ func (cfg Config) GetListenerPort() string {
 }
 
 func initConfig() error {
+	iniPath := "/etc/annotations.conf" //"/etc/serv"
+
+	file, err := os.Open(iniPath)
+
+	fbytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println("Cant start server without initial file\n" +
+			"Please creaate init file and put it to /etc/serv/")
+		return err
+	}
+
+	fileData := string(fbytes)
+	configs := strings.Split(fileData, "\n")
+
+	countFields := reflect.ValueOf(Config{}).NumField()
+	if countFields > len(configs) {
+		return errors.New("Incorrect count fields in config")
+	}
+
+
+	configInstance = &Config{
+		configs[0],
+		configs[1],
+		configs[2],
+		configs[3],
+		configs[4],
+		configs[5],
+		configs[6],
+		configs[7],
+		configs[8],
+		configs[9],
+		configs[10],
+	}
+	
 	return nil
 }
 

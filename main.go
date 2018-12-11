@@ -5,7 +5,9 @@ import (
 	"strconv"
 
 	"github.com/OlympBMSTU/annotations/config"
+	// "github.com/OlympBMSTU/annotations/db"
 	"github.com/jackc/pgx"
+	"fmt"
 )
 
 func Init() (*pgx.ConnPool, error) {
@@ -45,4 +47,6 @@ func main() {
 		log.Print(err)
 	}
 
+	fmt.Println(pool)
+	// service := db.AnnotationService{pool}
 }
