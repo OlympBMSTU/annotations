@@ -40,28 +40,41 @@ func ComputeName(filename string) string {
 }
 
 // todo refactor close open work eith strings
-func WriteFile(fileHdr *multipart.FileHeader) result.FSResult {
+func WriteFile(fileHdr *multipart.FileHeader, args ...interface{}) result.FSResult {
 	if fileHdr == nil {
 		log.Print("No file sended")
 		return result.ErrorResult(errors.New("No file presented"))
 	}
 	conf, _ := config.GetConfigInstance()
 
-	ext := filepath.Ext(fileHdr.Filename)
-	newNamePart := ComputeName(fileHdr.Filename)
-	staticPath := conf.GetFileStorageName() + "/"
-	newDirsPath := staticPath + newNamePart[:6]
 
-	filePathWithExt := staticPath + newNamePart + ext
-	idx := 1
-	for {
-		if FileExist(filePathWithExt) {
+	name := ""
+	if len(args) > 0 {
+		name = string(args[0].(int))
+	}
+
+	ext := filepath.Ext(fileHdr.Filename)
+
+	newDirsPath := conf.GetFileStorageName()
+	filePathWithExt := ""
+	if len(name) > 0 {
+		filePathWithExt = staticPath + name + ext
+	} else {
+		newNamePart := ComputeName(fileHdr.Filename)
+		staticPath := conf.GetFileStorageName() + "/"
+		newDirsPath := staticPath + newNamePart[:6]
+
+		filePathWithExt := staticPath + newNamePart + ext
+		idx := 1
+		for {
+			if FileExist(filePathWithExt) {
 			newNamePart += strconv.Itoa(idx)
 			filePathWithExt = staticPath + newNamePart + ext
-		} else {
-			break
+			} else {
+				break
+			}
+			idx++
 		}
-		idx++
 	}
 
 	inFile, err := fileHdr.Open()
