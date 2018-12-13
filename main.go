@@ -1,52 +1,62 @@
 package main
 
 import (
+	"net/http"
 	"log"
-	"strconv"
 
 	"github.com/OlympBMSTU/annotations/config"
+	"github.com/OlympBMSTU/annotations/controllers"
+
 	// "github.com/OlympBMSTU/annotations/db"
 	"github.com/jackc/pgx"
-	"fmt"
 )
 
 func Init() (*pgx.ConnPool, error) {
-	conf, err := config.GetConfigInstance()
+	_, err := config.GetConfigInstance()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	port, err := strconv.Atoi(conf.GetDBPort())
-	if err != nil {
-		log.Print(err)
-		return nil, err
-	}
-	connPoolConfig := pgx.ConnPoolConfig{
-		ConnConfig: pgx.ConnConfig{
-			Host:     conf.GetDBHost(),
-			User:     conf.GetDBUser(),
-			Port:     uint16(port),
-			Password: conf.GetDBPassword(),
-			Database: conf.GetDatabase(),
-		},
-		MaxConnections: 5,
-	}
+	// port, err := strconv.Atoi(conf.GetDBPort())
+	// if err != nil {
+	// 	log.Print(err)
+	// 	return nil, err
+	// }
+	// connPoolConfig := pgx.ConnPoolConfig{
+	// 	ConnConfig: pgx.ConnConfig{
+	// 		Host:     conf.GetDBHost(),
+	// 		User:     conf.GetDBUser(),
+	// 		Port:     uint16(port),
+	// 		Password: conf.GetDBPassword(),
+	// 		Database: conf.GetDatabase(),
+	// 	},
+	// 	MaxConnections: 5,
+	// }
 
-	pool, err := pgx.NewConnPool(connPoolConfig)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	return pool, nil
+	// pool, err := pgx.NewConnPool(connPoolConfig)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return nil, err
+	// }
+	return nil, nil
 }
 
+func InitConfig() {
+	http.Handle("/api/annotations/upload", http.HandlerFunc(controllers.UploadAnnotationHandler))
+}
+
+
 func main() {
-	pool, err := Init()
+	_, err := Init()
 	if err != nil {
 		log.Print(err)
 	}
 
-	fmt.Println(pool)
-	// service := db.AnnotationService{pool}
+	conf, _ := config.GetConfigInstance() 
+
+	// fmt.Println(pool)
+	// service := db.AnnotationService{pool}'
+
+	http.ListenAndServe(conf.GetListenerHost() + ":" + conf.GetListenerPort(), nil)
 }
