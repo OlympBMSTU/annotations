@@ -55,14 +55,14 @@ func WriteFile(fileHdr *multipart.FileHeader, args ...interface{}) result.FSResu
 
 	ext := filepath.Ext(fileHdr.Filename)
 
-	newDirsPath := conf.GetFileStorageName()
+	staticPath := conf.GetFileStorageName() + "/"
 	filePathWithExt := ""
+	newDirsPath := staticPath
 	if len(name) > 0 {
 		filePathWithExt = staticPath + name + ext
 	} else {
 		newNamePart := ComputeName(fileHdr.Filename)
-		staticPath := conf.GetFileStorageName() + "/"
-		newDirsPath := staticPath + newNamePart[:6]
+		newDirsPath += newNamePart[:6]
 
 		filePathWithExt := staticPath + newNamePart + ext
 		idx := 1
@@ -75,6 +75,7 @@ func WriteFile(fileHdr *multipart.FileHeader, args ...interface{}) result.FSResu
 			}
 			idx++
 		}
+		name = newNamePart + ext
 	}
 
 	inFile, err := fileHdr.Open()
@@ -103,5 +104,5 @@ func WriteFile(fileHdr *multipart.FileHeader, args ...interface{}) result.FSResu
 		log.Println(err.Error())
 		return result.ErrorResult(err)
 	}
-	return result.OkResult(newNamePart + ext)
+	return result.OkResult(name)
 }

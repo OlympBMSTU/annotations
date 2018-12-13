@@ -3,8 +3,8 @@ package matcher_result
 import (
 	"net/http"
 
-	fs "github.com/OlympBMSTU/exercises/fstorage/result"
-	"github.com/OlympBMSTU/exercises/result"
+	fs "github.com/OlympBMSTU/annotations/fstorage/result"
+	"github.com/OlympBMSTU/annotations/result"
 )
 
 var mapHttpFsStatuses = map[int]ResultInfo{

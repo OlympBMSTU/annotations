@@ -3,8 +3,8 @@ package matcher_result
 import (
 	"net/http"
 
-	auth_res "github.com/OlympBMSTU/exercises/auth/result"
-	"github.com/OlympBMSTU/exercises/result"
+	auth_res "github.com/OlympBMSTU/annotations/auth/result"
+	"github.com/OlympBMSTU/annotations/result"
 )
 
 var mapHttpAuthStatuses = map[int]ResultInfo{

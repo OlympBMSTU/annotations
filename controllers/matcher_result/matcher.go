@@ -4,14 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 
-	auth_result "github.com/OlympBMSTU/exercises/auth/result"
-	http_res "github.com/OlympBMSTU/exercises/controllers/http_result"
-	db_result "github.com/OlympBMSTU/exercises/db/result"
-	fs_result "github.com/OlympBMSTU/exercises/fstorage/result"
-	parser_result "github.com/OlympBMSTU/exercises/parser/result"
-	root_result "github.com/OlympBMSTU/exercises/result"
-	sender_result "github.com/OlympBMSTU/exercises/sender/result"
-	"github.com/OlympBMSTU/exercises/views/output"
+	auth_result "github.com/OlympBMSTU/annotations/auth/result"
+	http_res "github.com/OlympBMSTU/annotations/controllers/http_result"
+	fs_result "github.com/OlympBMSTU/annotations/fstorage/result"
+	root_result "github.com/OlympBMSTU/annotations/result"
+	"github.com/OlympBMSTU/annotations/views/output"
+
 )
 
 func fillResult(info ResultInfo, body interface{}) http_res.HttpResult {
@@ -61,29 +59,16 @@ func fillResult(info ResultInfo, body interface{}) http_res.HttpResult {
 
 func MatchResult(res root_result.Result) http_res.HttpResult {
 	var infoRes ResultInfo
-	var bodyData interface{}
-	bodyData = nil
+	var bodyData interface{} = nil
+	// bodyData = nil/
 
 	switch res.(type) {
-	case db_result.DbResult:
-		if !res.IsError() {
-			bodyData = res.GetData()
-		}
-		infoRes = getAssociatedDbInfo(res)
-		// return MatchDbResult(res)
 	case fs_result.FSResult:
 		infoRes = getAssociatedFsInfo(res)
 		// return MatchFSResult(res)
 	case auth_result.AuthResult:
 		infoRes = getAssociatedAuthInfo(res)
 		// return MatchAuthResult(res)
-	case sender_result.SenderResult:
-		infoRes = getAssociatedSenderInfo(res)
-		// return MatchSenderResult(res)
-	case parser_result.ParserResult:
-		infoRes = getAssociatedParserInfo(res)
-		infoRes.Message += res.GetStatus().GetDescription()
-		// return MatchParserResult(res)
 	default:
 		// coorect this
 		return http_res.ResultInernalSreverError()

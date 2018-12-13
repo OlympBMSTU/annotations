@@ -1,13 +1,9 @@
 package controllers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"strconv"
-	"strings"
 
-	"github.com/OlympBMSTU/annotations/config"
 	"github.com/OlympBMSTU/annotations/fstorage"
 	"github.com/OlympBMSTU/annotations/result"
 	// "github.com/OlympBMSTU/exercises/views"
@@ -15,7 +11,7 @@ import (
 
 // UploadExerciseHandler : Controller that takes multipart form data
 // parses it, saves exercise to db and sends answer to secret system
-func UploadExerciseHandler(writer http.ResponseWriter, request *http.Request) {
+func UploadAnnotationHandler(writer http.ResponseWriter, request *http.Request) {
 	userID := CheckMethodAndAuthenticate(writer, request, "POST")
 	if userID == nil {
 		return
@@ -36,7 +32,7 @@ func UploadExerciseHandler(writer http.ResponseWriter, request *http.Request) {
 	for _, fheaders := range request.MultipartForm.File {
 		for _, hdr := range fheaders {
 			//	_, header, _ := request.FormFile("file")
-			fsRes = fstorage.WriteFile(hdr)
+			fsRes = fstorage.WriteFile(hdr, string(*userID))
 			if fsRes.IsError() {
 				WriteResponse(&writer, "JSON", fsRes)
 				return

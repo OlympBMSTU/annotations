@@ -94,7 +94,7 @@ func authenticateUser(writer http.ResponseWriter, req *http.Request) *uint {
 		WriteResponse(&writer, "JSON", authRes)
 		return nil
 	}
-	userID := authRes.GetData().(uint)
+	userID := authRes.GetData().GetData().(uint)
 	return &userID
 }
 
